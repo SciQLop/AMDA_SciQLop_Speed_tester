@@ -4,6 +4,7 @@ import pathlib
 
 _DONE_ = "&#10004;"
 _PENDING_ = "&#10144;"
+_FAIL_ = "&#10060;"
 #_PENDING_ = '<div class="loader"></div>'
 
 _ITEMS = list(ITEMS) + ["result"]
@@ -25,6 +26,8 @@ class MainPage:
             return _DONE_
         if value == "pending":
             return _PENDING_
+        if value == "failed":
+            return _FAIL_
         return value
 
     def update(self, **kwargs):

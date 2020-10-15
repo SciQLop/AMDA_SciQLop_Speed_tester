@@ -25,7 +25,7 @@ SEQUENCE = {
     "simple_dl_sciqlop": ("Simple download on sciqlop.lpp.polytechnique.fr", download_probe,
                           "http://sciqlop.lpp.polytechnique.fr/data/C1_CP_AUX_ECLAT_FLT_T96__20010101_000000_20141231_235959_V140217.cdf"),
     "simple_dl_amda": ("Simple download on amda.cdpp.eu", download_probe,
-                       "http://amda.cdpp.eu/C1_CP_AUX_ECLAT_FLT_T96__20010101_000000_20141231_235959_V140217.cdf"),
+                       "http://amda.irap.omp.eu/C1_CP_AUX_ECLAT_FLT_T96__20010101_000000_20141231_235959_V140217.cdf"),
     "simple_dl_solo": ("Simple download on solarorbiter.irap.omp.eu", download_probe,
                        "http://solarorbiter.irap.omp.eu/documents/C1_CP_AUX_ECLAT_FLT_T96__20010101_000000_20141231_235959_V140217.cdf")
 }
@@ -59,7 +59,7 @@ class TestSequence(QThread):
                 print("done")
                 self.update_progress.emit(name, "done")
             except:
-                pass
+                self.update_progress.emit(name, "failed")
         self.message.emit("Full test complete")
         self.done.emit(True)
         self.push_result.emit(result)

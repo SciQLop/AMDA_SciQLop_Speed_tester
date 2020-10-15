@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    .collapsible {{
+  background-color: #2c6978
+    ;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}}
+
+.active, .collapsible:hover {{
+  background-color: #0d5ebf
+    ;
+}}
+
+.content {{
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #a5e3ee
+    ;
+}}
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>AMDA/SciQLop network speed tests and investigations</title>
+</head>
+<body>
+<img src="https://avatars0.githubusercontent.com/u/45902222?s=200&v=4" style="height: 120px">
+<img src="http://cdpp.irap.omp.eu/images/logosOutils/amda.png" style="height: 120px">
+<h1 align="center">AMDA/SciQLop network speed tests and investigations</h1>
+<hr class="rounded", style="border-top: 8px solid #096399;border-radius: 5px;">
+<h2>Disclaimer:</h2>
+This software is about to perform some traceroute to help us to understand and investigate some possible bottlenecks in
+our network.
+If you don't want to share with us information like your IP or your location, just don't start this test.
+<hr class="rounded", style="border-top: 8px solid #096399;border-radius: 5px;">
+<h2>Test sequence:</h2>
+<ul>
+    {sequence}
+</ul>
+
+<hr class="rounded", style="border-top: 8px solid #096399;border-radius: 5px;">
+<button type="button" class="collapsible">Results</button>
+<div class="content">
+  <p>
+  {result}
+  </p>
+</div>
+
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {{
+      coll[i].addEventListener("click", function() {{
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "block") {{
+          content.style.display = "none";
+        }} else {{
+          content.style.display = "block";
+        }}
+      }});
+    }}
+</script>
+</body>
+</html>

@@ -29,6 +29,7 @@ SEQUENCE = {
     "simple_dl_solo": ("Simple download on solarorbiter.irap.omp.eu", download_probe,
                        "http://solarorbiter.irap.omp.eu/documents/C1_CP_AUX_ECLAT_FLT_T96__20010101_000000_20141231_235959_V140217.cdf")
 }
+
 ITEMS = SEQUENCE.keys()
 SEQUENCE_HTML = "\n".join(
     ["<li>{{{name}}} {desc}</li>".format(name=key, desc=value[0]) for key, value in SEQUENCE.items()])

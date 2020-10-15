@@ -33,7 +33,7 @@ def get_from_amda(product='thb_bl', start_time=datetime(2018, 10, 14, 0), stop_t
     data = requests.get(
         get_amda_dl_url(product=product, start_time=start_time, stop_time=stop_time, token=token, base_url=base_url,
                         debug=debug))
-    return data.text if data is not None else None
+    return data.content if data is not None else None
 
 
 def dl_from_rest_api():

@@ -3,6 +3,7 @@ import traceback
 from amda_sciqlop_speed_tester.network_probes import trace_route
 from amda_sciqlop_speed_tester.simple_downloads import download
 from amda_sciqlop_speed_tester.time_measurement import exec_time
+from amda_sciqlop_speed_tester import sciqlop_tester
 
 
 def download_probe(url: str):
@@ -14,6 +15,18 @@ def download_probe(url: str):
     }
 
 
+def sciqlop_api_probe():
+    result = []
+    for i in range(10):
+        data, start, stop = exec_time(sciqlop_tester.dl_from_rest_api())
+        result.append(
+            {
+                "data_len": len(data),
+                "duration_ns": stop - start
+            }
+        )
+
+
 SEQUENCE = {
     "traceroute_google": ("Traceroute google.com", trace_route, "google.com"),
     "traceroute_hephaistos": (
@@ -21,6 +34,7 @@ SEQUENCE = {
     "traceroute_sciqlop": (
         "Traceroute sciqlop.lpp.polytechnique.fr", trace_route, "sciqlop.lpp.polytechnique.fr"),
     "traceroute_amda": ("Traceroute amda.irap.omp.eu", trace_route, "amda.irap.omp.eu"),
+    "sciqlop_api": ("Perform few requests on SciQLop cache", sciqlop_api_probe),
     "simple_dl_hephaistos": ("Simple download on hephaistos.lpp.polytechnique.fr", download_probe,
                              "https://hephaistos.lpp.polytechnique.fr/data/jeandet/C1_CP_AUX_ECLAT_FLT_T96__20010101_000000_20141231_235959_V140217.cdf"),
     "simple_dl_sciqlop": ("Simple download on sciqlop.lpp.polytechnique.fr", download_probe,

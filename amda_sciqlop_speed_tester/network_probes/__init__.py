@@ -1,4 +1,5 @@
 import subprocess
+import os
 
 
 def trace_route(address: str, ttl=30):

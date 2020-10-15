@@ -18,13 +18,14 @@ def download_probe(url: str):
 def sciqlop_api_probe():
     result = []
     for i in range(10):
-        data, start, stop = exec_time(sciqlop_tester.dl_from_rest_api())
+        data, start, stop = exec_time(sciqlop_tester.dl_from_rest_api)
         result.append(
             {
                 "data_len": len(data),
                 "duration_ns": stop - start
             }
         )
+    return result
 
 
 SEQUENCE = {

@@ -1,16 +1,11 @@
 import subprocess
-import os
+import platform
 
 
-def trace_route(address: str, ttl=30):
-    def extract_ip(line: str):
-        line = line.strip().replace('  ', ' ').split()
-        if len(line) > 1:
-            return line[1]
-        return None
-
-    route = subprocess.run(['traceroute', f'-m{ttl}', address], stdout=subprocess.PIPE).stdout.decode().split(
-        '\n')[1:]
-    route = [extract_ip(line) for line in route]
-    return [ip for ip in route if ip is not None]
+def trace_route(address: str):
+    if platform.system() == 'Windows':
+        route = subprocess.run(['tracert', address], stdout=subprocess.PIPE).stdout.decode('cp850')
+    else:
+        route = subprocess.run(['traceroute', address], stdout=subprocess.PIPE).stdout.decode()
+    return route
 

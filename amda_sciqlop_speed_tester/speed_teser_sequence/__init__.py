@@ -29,10 +29,10 @@ def sciqlop_api_probe():
     return result
 
 
-def amda_api_probe():
+def _amda_api_probe(**kwargs):
     result = []
-    for i in range(10):
-        data, start, stop = exec_time(amda_tester.dl_from_rest_api)
+    for i in range(4):
+        data, start, stop = exec_time(amda_tester.dl_from_rest_api, **kwargs)
         result.append(
             {
                 "data_len": len(data),
@@ -40,6 +40,14 @@ def amda_api_probe():
             }
         )
     return result
+
+
+def amda_api_probe():
+    return _amda_api_probe()
+
+
+def amda_api_probe_cdf():
+    return _amda_api_probe(output_format="CDF")
 
 
 SEQUENCE = {
@@ -50,7 +58,8 @@ SEQUENCE = {
         "Traceroute sciqlop.lpp.polytechnique.fr", trace_route, "sciqlop.lpp.polytechnique.fr"),
     "traceroute_amda": ("Traceroute amda.irap.omp.eu", trace_route, "amda.irap.omp.eu"),
     "sciqlop_api": ("Perform few requests on SciQLop cache", sciqlop_api_probe),
-    "amda_api": ("Perform few requests on AMDA webservice", amda_api_probe),
+    "amda_api": ("Perform few requests on AMDA webservice(ASCII)", amda_api_probe),
+    "amda_api_cdf": ("Perform few requests on AMDA webservice(CDF)", amda_api_probe_cdf),
     "simple_dl_hephaistos": ("Simple download on hephaistos.lpp.polytechnique.fr", download_probe,
                              "https://hephaistos.lpp.polytechnique.fr/data/jeandet/C1_CP_AUX_ECLAT_FLT_T96__20010101_000000_20141231_235959_V140217.cdf"),
     "simple_dl_sciqlop": ("Simple download on sciqlop.lpp.polytechnique.fr", download_probe,
@@ -58,7 +67,10 @@ SEQUENCE = {
     "simple_dl_amda": ("Simple download on amda.cdpp.eu", download_probe,
                        "http://amda.irap.omp.eu/C1_CP_AUX_ECLAT_FLT_T96__20010101_000000_20141231_235959_V140217.cdf"),
     "simple_dl_solo": ("Simple download on solarorbiter.irap.omp.eu", download_probe,
-                       "http://solarorbiter.irap.omp.eu/documents/C1_CP_AUX_ECLAT_FLT_T96__20010101_000000_20141231_235959_V140217.cdf")
+                       "http://solarorbiter.irap.omp.eu/documents/C1_CP_AUX_ECLAT_FLT_T96__20010101_000000_20141231_235959_V140217.cdf"),
+    "simple_dl_ipsl": ("Simple download on distrib-coffee.ipsl.jussieu.fr", download_probe,
+                       "https://distrib-coffee.ipsl.jussieu.fr/pub/linux/fedora/linux/releases/32/Silverblue/aarch64/os/images/pxeboot/initrd.img")
+
 }
 
 ITEMS = SEQUENCE.keys()

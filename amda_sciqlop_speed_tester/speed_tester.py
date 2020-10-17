@@ -1,6 +1,7 @@
 import sys, os
+import traceback
 import json
-from tempfile import NamedTemporaryFile
+from tempfile import gettempdir
 import pkg_resources
 from pygments.lexers.data import JsonLexer
 from pygments.formatters import HtmlFormatter
@@ -17,15 +18,17 @@ from PyQt5.QtWebEngineWidgets import QWebEnginePage, QWebEngineView
 from amda_sciqlop_speed_tester.images import MainPage
 from amda_sciqlop_speed_tester.speed_teser_sequence import TestSequence
 
+RESULT_PATH = os.path.join(gettempdir(), "AMDA_SciQLop_test_result.json")
+
 
 class AMDA_SciQLop_Speed_tester(QMainWindow):
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None,
+                 filename=pkg_resources.resource_filename('amda_sciqlop_speed_tester.images', 'logo.png')):
         """Initialize the components of the main window."""
         super(AMDA_SciQLop_Speed_tester, self).__init__(parent)
         self.setWindowTitle('AMDA_SciQLop_Speed_tester')
-        window_icon = pkg_resources.resource_filename('amda_sciqlop_speed_tester.images',
-                                                      'logo.png')
+        window_icon = filename
         self.setWindowIcon(QIcon(window_icon))
 
         self.widget = QWidget()
@@ -87,12 +90,16 @@ class AMDA_SciQLop_Speed_tester(QMainWindow):
 
     def show_result(self, result: dict):
         self._result = result
-        pretty_result = json.dumps(result, indent=4)
-        html = highlight(pretty_result, JsonLexer(), HtmlFormatter())
-        self.html_page.update(result=html)
-        self.page.setHtml(self.html_page.html())
+        if self._result is not None:
+            pretty_result = json.dumps(result, indent=4)
+            html = highlight(pretty_result, JsonLexer(), HtmlFormatter())
+            self.html_page.update(result=html)
+            self.page.setHtml(self.html_page.html())
+            with open(RESULT_PATH, 'w+b') as f:
+                f.write(json.dumps(self._result, indent=4).encode())
 
     def test_complete(self, success: bool):
+        self.start_test_qpb.setText("Restart test")
         self.start_test_qpb.setEnabled(True)
         self.send_result_qpb.setEnabled(True)
         self.save_result_qpb.setEnabled(True)
@@ -109,21 +116,26 @@ class AMDA_SciQLop_Speed_tester(QMainWindow):
 
     def send_result(self):
         if self._result is not None:
-            data_file = NamedTemporaryFile(mode="w+b")
-            data_file.write(json.dumps(self._result, indent=4).encode())
             QDesktopServices.openUrl(QUrl.fromEncoded(
-                f"mailto:alexis.jeandet@lpp.polytechnique.fr?subject=AMDA and SciQLop speed test results&attachment={data_file.name}".encode()))
+                f"mailto:alexis.jeandet@lpp.polytechnique.fr?subject=AMDA and SciQLop speed test results&attachment={RESULT_PATH}".encode()))
 
 
 def main():
-    application = QApplication(sys.argv)
-    window = AMDA_SciQLop_Speed_tester()
-    desktop = QDesktopWidget().availableGeometry()
-    width = int((desktop.width() - window.width()) / 2)
-    height = int((desktop.height() - window.height()) / 2)
-    window.show()
-    window.move(width, height)
-    sys.exit(application.exec_())
+    status = 1
+    try:
+        application = QApplication(sys.argv)
+        window = AMDA_SciQLop_Speed_tester()
+        desktop = QDesktopWidget().availableGeometry()
+        width = int((desktop.width() - window.width()) / 2)
+        height = int((desktop.height() - window.height()) / 2)
+        window.show()
+        window.move(width, height)
+        status = application.exec_()
+    except:
+        print(traceback.format_exc())
+    if os.path.exists(RESULT_PATH):
+        os.remove(RESULT_PATH)
+    sys.exit(status)
 
 
 if __name__ == '__main__':

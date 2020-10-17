@@ -1,7 +1,7 @@
 from setuptools import setup
 
 requirements = [
-    'requests', 'PyQt5', 'pytest', 'PyQtWebEngine'  # TODO: put your package requirements here
+    'requests', 'PyQt5', 'pytest', 'PyQtWebEngine', 'pygments'
 ]
 
 setup(

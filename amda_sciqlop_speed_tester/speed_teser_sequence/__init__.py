@@ -1,5 +1,7 @@
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
 import traceback
+from datetime import datetime
+import platform
 from amda_sciqlop_speed_tester.network_probes import trace_route
 from amda_sciqlop_speed_tester.simple_downloads import download
 from amda_sciqlop_speed_tester.time_measurement import exec_time
@@ -91,7 +93,10 @@ class TestSequence(QThread):
     done = pyqtSignal(bool)
 
     def run(self):
-        result = {}
+        result = {
+            "begin_time": str(datetime.now()),
+            "platform": f"{platform.system()} {platform.release()}"
+        }
         for name, task in SEQUENCE.items():
             self.message.emit(f"Doing {name}")
             self.update_progress.emit(name, "pending")
@@ -102,6 +107,7 @@ class TestSequence(QThread):
             except:
                 self.update_progress.emit(name, "failed")
                 result[name] = {"status": "failed", "data": traceback.format_exc()}
+        result["end_time"] = str(datetime.now())
         self.message.emit("Full test complete")
         self.done.emit(True)
         self.push_result.emit(result)

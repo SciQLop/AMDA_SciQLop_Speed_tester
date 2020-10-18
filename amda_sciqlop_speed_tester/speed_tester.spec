@@ -23,10 +23,28 @@ exe = EXE(pyz,
           a.datas,
           [],
           name='speed_tester',
-          debug=False,
+          debug=True,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
           console=False )
+
+coll = COLLECT(exe,
+               a.binaries,
+               a.zipfiles,
+               a.datas,
+               strip=False,
+               upx=True,
+               name='AMDA_SciQLop_Speed_tester')
+
+app = BUNDLE(coll,
+  name='AMDA_SciQLop_Speed_tester.app',
+  icon='images/icon.icns',
+  bundle_identifier=None,
+  info_plist={
+    'CFBundleVersion': '1.0.0',
+    'CFBundleShortVersionString': '1.0.0',
+    'NSHighResolutionCapable': True
+  })

@@ -1,0 +1,29 @@
+
+name: Generate standalone exe for OSX
+
+on: [push]
+
+jobs:
+  build:
+    name: build python packages
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
+      - name: Install Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.8'
+          architecture: x64
+      - name: install deps
+        run: pip install -e .
+      - name: install pyinstaller
+        run: pip install git+https://github.com/pyinstaller/pyinstaller
+      - name: generate exe
+        run: pyinstaller --onefile --windowed ./amda_sciqlop_speed_tester/speed_tester.spec && ls ./dist
+      - uses: actions/upload-artifact@v2
+        with:
+          name: speed_tester-osx
+          path: dist/AMDA_SciQLop_Speed_tester.app
+

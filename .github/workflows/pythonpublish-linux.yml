@@ -1,0 +1,27 @@
+
+name: Python packages linux
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    name: build python packages
+    runs-on: ubuntu-latest
+    container: jeandet/manylinuxcpp2017
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
+      - name: install deps
+        run: $PYTHON38/bin/pip install -e .
+      - name: install pyinstaller
+        run: $PYTHON38/bin/pip install git+https://github.com/pyinstaller/pyinstaller
+      - name: generate exe
+        run: $PYTHON38/bin/pyinstaller --onefile --windowed ./amda_sciqlop_speed_tester/speed_tester.spec
+      - uses: actions/upload-artifact@v2
+        with:
+          name: speed_tester-linux
+          path: dist/speed_tester
+

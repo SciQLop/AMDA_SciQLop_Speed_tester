@@ -7,21 +7,21 @@ jobs:
   build:
     name: build python packages
     runs-on: ubuntu-latest
-    container: centos:7.8.2003
+    container: centos:8
     steps:
       - name: install tools and python 3.8
-        run: yum install -y centos-release-scl-rh && yum update -y &&  yum install -y centos-release-scl git rh-python38-python-devel.x86_64 rh-python38-python-wheel.noarch rh-python38-python-pip.noarch
-      - name: fix python 3.8 so name for pyinstaller
-        run: ln -s /opt/rh/rh-python38/root/lib64/libpython3.8.so /opt/rh/rh-python38/root/lib64/libpython3.8.so.1.0
+        run: yum install -y python38-setuptools.noarch python38-wheel-wheel.noarch python38-setuptools-wheel.noarch python38-pip.noarch python3-virtualenv.noarch git
       - uses: actions/checkout@v1
         with:
           submodules: true
+      - name: create venv
+        run: virtualenv-3 -p python3.8 venv
       - name: install deps
-        run: /opt/rh/rh-python38/root/bin/pip3 install -e .
+        run: venv/bin/pip install --upgrade -e .
       - name: install pyinstaller
-        run: /opt/rh/rh-python38/root/bin/pip3 install git+https://github.com/pyinstaller/pyinstaller
+        run: venv/bin/pip install git+https://github.com/pyinstaller/pyinstaller
       - name: generate exe
-        run: LD_LIBRARY_PATH=/opt/rh/rh-python38/root/lib64/ /opt/rh/rh-python38/root/usr/local/bin/pyinstaller --onefile --windowed ./amda_sciqlop_speed_tester/speed_tester.spec
+        run: venv/bin/pyinstaller --onefile --windowed ./amda_sciqlop_speed_tester/speed_tester.spec
       - uses: actions/upload-artifact@v2
         with:
           name: speed_tester-linux

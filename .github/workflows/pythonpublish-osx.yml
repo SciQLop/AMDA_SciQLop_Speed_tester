@@ -22,8 +22,10 @@ jobs:
         run: pip install git+https://github.com/pyinstaller/pyinstaller
       - name: generate exe
         run: pyinstaller --onefile --windowed ./amda_sciqlop_speed_tester/speed_tester.spec && ls ./dist
+      - name: zip app
+        run: zip -r dist/AMDA_SciQLop_Speed_tester.app.zip dist/AMDA_SciQLop_Speed_tester.app
       - uses: actions/upload-artifact@v2
         with:
           name: speed_tester-osx
-          path: dist/AMDA_SciQLop_Speed_tester.app
+          path: dist/AMDA_SciQLop_Speed_tester.app.zip
 

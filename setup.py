@@ -12,7 +12,11 @@ setup(
     author_email='alexis.jeandet@member.fsf.org',
     url='https://github.com/jeandet/AMDA_SciQLop_Speed_tester',
     packages=['amda_sciqlop_speed_tester', 'amda_sciqlop_speed_tester.images',
-              'amda_sciqlop_speed_tester.tests'],
+              'amda_sciqlop_speed_tester.tests', 'amda_sciqlop_speed_tester.amda_tester',
+              'amda_sciqlop_speed_tester.network_probes', 'amda_sciqlop_speed_tester.sciqlop_tester',
+              'amda_sciqlop_speed_tester.simple_downloads', 'amda_sciqlop_speed_tester.speed_teser_sequence',
+              'amda_sciqlop_speed_tester.time_measurement'
+              ],
     package_data={'amda_sciqlop_speed_tester.images': ['*.png']},
     entry_points={
         'console_scripts': [
